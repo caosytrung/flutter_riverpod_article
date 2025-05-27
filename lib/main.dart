@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod_article/single_provider_solution/widgets/single_provider_product_page.dart';
+import 'package:flutter_riverpod_article/multiple_provider_solution/widget/single_provider_product_page.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -35,7 +35,7 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(title),
       ),
-      body: const SingleProviderProductPage(),
+      body: const MultipleProviderProductPage(),
     );
   }
 }

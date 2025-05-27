@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod_article/single_provider_solution/provider/product_big_provider.dart';
+import 'package:flutter_riverpod_article/multiple_provider_solution/provider/multiple_product_providers.dart';
 
-class SingleProviderProductPage extends ConsumerWidget {
-  const SingleProviderProductPage({super.key});
+class MultipleProviderProductPage extends ConsumerWidget {
+  const MultipleProviderProductPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(productNotifierProvider);
+    final products = ref.watch(productProvider);
+    final allCategories = ref.watch(allCategoriesProvider);
 
     return Column(
       children: [
@@ -23,25 +24,19 @@ class SingleProviderProductPage extends ConsumerWidget {
                     prefixIcon: Icon(Icons.search),
                   ),
                   onChanged: (value) {
-                    ref
-                        .read(productNotifierProvider.notifier)
-                        .updateNameFilter(value);
+                    ref.read(nameFilterProvider.notifier).state = value;
                   },
                 ),
               ),
               const SizedBox(width: 8),
               // Category dropdown
               DropdownButton<String>(
-                value:
-                    state.categoryFilter.isEmpty ? null : state.categoryFilter,
+                value: '',
                 hint: const Text("Category"),
                 onChanged: (value) {
-                  ref
-                      .read(productNotifierProvider.notifier)
-                      .updateCategoryFilter(value ?? '');
+                  ref.read(categoryFilterProvider.notifier).state = value ?? '';
                 },
-                items:
-                    ['All', ...state.categories].map((category) {
+                items: ['All', ...allCategories].map((category) {
                   return DropdownMenuItem(
                     value: category == 'All' ? '' : category,
                     child: Text(category),
@@ -55,10 +50,10 @@ class SingleProviderProductPage extends ConsumerWidget {
         // 🧾 Product List
         Expanded(
           child: ListView.separated(
-            itemCount: state.products.length,
+            itemCount: products.length,
             separatorBuilder: (_, __) => const Divider(height: 1),
             itemBuilder: (context, index) {
-              final product = state.products[index];
+              final product = products[index];
               return ListTile(
                 leading: CircleAvatar(child: Text(product.id.toString())),
                 title: Text(product.name),
